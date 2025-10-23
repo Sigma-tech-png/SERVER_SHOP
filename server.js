@@ -36,7 +36,7 @@ app.post('/api/post',async (req,res) => {
     const user = new User({name:name});
     await user.save();
 
-    const token = jwt.sign({name:name},process.env.MONGO);
+    const token = jwt.sign({name:name},process.env.SECRET,{expiresIn:"1d"});
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "none",
