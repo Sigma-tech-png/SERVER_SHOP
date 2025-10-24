@@ -27,7 +27,7 @@ const userSchema = mongoose.Schema({
 
 const User = mongoose.model("User",userSchema);
 
-app.get("/" ,(req,res) => {
+app.get("/" ,Auth,(req,res) => {
     res.json({text:"Shop Card"})
 })
 
@@ -38,15 +38,31 @@ app.post('/api/post',async (req,res) => {
 
     const token = jwt.sign({name:name},process.env.SECRET,{expiresIn:"1d"});
     res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "none",
-      secure: true,
-      maxAge: 1000 * 60 * 60 * 24
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 1000 * 60 * 60 * 24
     });
-    console.log("Saved")
 
+    console.log("Saved");
     res.json({text:"Created..."})
 })
+
+async function Auth(req,res,next){
+    const token = req.cookies.token;
+    if(!token){
+        return res.status(401).json({status:false});
+    }
+    try{
+        const decoded = jwt.verify(token , process.env.SECRET)
+        req.user = decoded;
+        next()
+    }catch(err){
+        console.log(err);
+        console.log("JWT ERROR")
+        return res.status(401).json({status:false})
+    }
+}
 
 app.listen(3000,() => {
     console.log("Server start work on port http://localhost:3000")
