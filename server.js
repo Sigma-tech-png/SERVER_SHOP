@@ -81,6 +81,18 @@ app.get("/user/profile",Auth,async (req,res)=> {
     res.json({name:data.name,balance:user_balance.balance});
 })
 
+app.post("/buy",Auth,async (req,res)=> {
+    const username = req.user.name;
+    const user = await User.findOne({name:username});
+    
+    if(user.balance == 100){
+        user.balance -= 50;
+        user.product = 1;
+        await user.save();
+    }
+    res.json({status:true})
+})
+
 app.listen(3000,() => {
     console.log("Server start work on port http://localhost:3000")
 })
