@@ -23,6 +23,14 @@ try{
 
 const userSchema = mongoose.Schema({
     name:String,
+    balance:{
+        type:Number,
+        default:100,
+    },
+    product:{
+        type:Number,
+        default:0,
+    }
 })
 
 const User = mongoose.model("User",userSchema);
@@ -63,6 +71,15 @@ async function Auth(req,res,next){
         return res.status(401).json({status:false})
     }
 }
+
+app.get("/user/profile",Auth,async (req,res)=> {
+    const data = req.user;
+    if(!data){
+        return res.json({name:"null"})
+    }
+    const user_balance = await User.findOne({name:data.name})
+    res.json({name:data.name,balance:user_balance.balance});
+})
 
 app.listen(3000,() => {
     console.log("Server start work on port http://localhost:3000")
