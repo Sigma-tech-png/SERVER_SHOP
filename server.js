@@ -47,8 +47,6 @@ app.post('/api/post',async (req,res) => {
     const token = jwt.sign({name:name},process.env.SECRET,{expiresIn:"1d"});
     res.cookie("token", token, {
         httpOnly: true,
-        sameSite: "none",
-        secure: true,
         maxAge: 1000 * 60 * 60 * 24
     });
 
