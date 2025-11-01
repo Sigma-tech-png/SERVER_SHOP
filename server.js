@@ -46,10 +46,10 @@ app.post('/api/post',async (req,res) => {
 
     const token = jwt.sign({name:name},process.env.SECRET,{expiresIn:"1d"});
     res.cookie('token', token, {
-        httpOnly: true,       // нельзя прочитать через JS
-        secure: true,         // только по HTTPS
-        sameSite: 'Strict',   // защита от CSRF
-        maxAge: 1000 * 60 * 60 * 24 // срок жизни (1 день)
+        httpOnly: true,
+        secure: true,         // обязательно для sameSite: 'None'
+        sameSite: 'None',     // позволяет кросс-доменные запросы
+        maxAge: 1000 * 60 * 60 * 24
     });
 
     console.log("Saved");
