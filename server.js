@@ -8,7 +8,8 @@ const app = express();
 
 app.use(cors({
     origin:process.env.DOMEN,
-    credentials:true,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
 }))
 app.use(express.json());
 app.use(cookieParser());
@@ -47,8 +48,9 @@ app.post('/api/post',async (req,res) => {
     const token = jwt.sign({name:name},process.env.SECRET,{expiresIn:"1d"});
     res.cookie('token', token, {
         httpOnly: true,
-        secure: true,         // обязательно для sameSite: 'None'
-        sameSite: 'None',     // позволяет кросс-доменные запросы
+        secure: true,
+        sameSite: "none",
+        path: "/",
         maxAge: 1000 * 60 * 60 * 24
     });
 
