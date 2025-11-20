@@ -48,10 +48,10 @@ app.post('/api/post',async (req,res) => {
     const token = jwt.sign({name:name},process.env.SECRET,{expiresIn:"1d"});
     res.cookie('token', token, {
         httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        path: "/",
-        maxAge: 1000 * 60 * 60 * 24
+        // secure: true,
+        // sameSite: "none",
+        // path: "/",
+        // maxAge: 1000 * 60 * 60 * 24
     });
 
     console.log("Saved");
